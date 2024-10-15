@@ -179,43 +179,47 @@ const App = () => {
   };
 
   // Execute clicking on the current link
-  const executeClicks = () => {
-    // Check if all links have been clicked
-    if (currentIndexRef.current >= clickQueueRef.current.length) {
-      dispatch(setIsRunning(false));
-      if (successAudioRef.current) successAudioRef.current.play(); // Play success sound
-      return;
-    }
+const executeClicks = () => {
+  // Check if all links have been clicked
+  if (currentIndexRef.current >= clickQueueRef.current.length) {
+    dispatch(setIsRunning(false));
+    if (successAudioRef.current) successAudioRef.current.play(); // Play success sound
+    return;
+  }
 
-    // If paused, do not proceed
-    if (isPausedRef.current) return;
+  // If paused, do not proceed
+  if (isPausedRef.current) return;
 
-    const { phone, link } = clickQueueRef.current[currentIndexRef.current];
+  const { phone, link } = clickQueueRef.current[currentIndexRef.current];
 
-    // Validate URL before opening
-    if (/^https?:\/\/[^\s$.?#].[^\s]*$/.test(link)) {
-      try {
-        // Open link in a new tab
-        window.open(link, '_blank');
-        dispatch(addClickedNumber(phone)); // Record the clicked number
-      } catch (err) {
-        console.error(`Failed to open link for ${phone}: ${link}`);
-        dispatch(setError(`Failed to open link for ${phone}.`));
-        if (errorAudioRef.current) errorAudioRef.current.play(); // Play error sound
-      }
-    } else {
-      console.warn(`Invalid URL for ${phone}: ${link}`);
-      dispatch(setError(`Invalid URL for ${phone}.`));
+  // Validate URL before opening
+  if (/^https?:\/\/[^\s$.?#].[^\s]*$/.test(link)) {
+    try {
+      // Open link in a new tab
+      window.open(link, '_blank');
+      dispatch(addClickedNumber(phone)); // Record the clicked number
+    } catch (err) {
+      console.error(`Failed to open link for ${phone}: ${link}`);
+      dispatch(setError(`Failed to open link for ${phone}.`));
       if (errorAudioRef.current) errorAudioRef.current.play(); // Play error sound
     }
+  } else {
+    console.warn(`Invalid URL for ${phone}: ${link}`);
+    dispatch(setError(`Invalid URL for ${phone}.`));
+    if (errorAudioRef.current) errorAudioRef.current.play(); // Play error sound
+  }
 
-    currentIndexRef.current += 1; // Move to the next link
+  currentIndexRef.current += 1; // Move to the next link
 
-    // Schedule the next click after 5 seconds
-    timerRef.current = setTimeout(() => {
-      executeClicks();
-    }, 5000);
-  };
+  // Generate a random interval between 1 and 30 seconds (in milliseconds)
+  const randomInterval = Math.floor(Math.random() * (30000 - 1000 + 1)) + 1000;
+
+  // Schedule the next click after the random interval
+  timerRef.current = setTimeout(() => {
+    executeClicks();
+  }, randomInterval);
+};
+
 
   // Stop (Pause) the clicking process
   const handleStop = () => {
