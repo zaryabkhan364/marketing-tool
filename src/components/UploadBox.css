@@ -1,0 +1,31 @@
+/* src/components/UploadBox.css */
+
+.uploadBox {
+  border: 2px dashed #4a90e2;
+  padding: 40px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #e0f7fa, #80deea);
+  text-align: center;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.3s ease;
+}
+
+.uploadBox:hover {
+  background: linear-gradient(to right, #b2ebf2, #26c6da);
+}
+
+.uploadBox p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .uploadBox {
+    padding: 20px;
+  }
+
+  .uploadBox p {
+    font-size: 14px;
+  }
+}
